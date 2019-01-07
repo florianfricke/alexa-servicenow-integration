@@ -1,0 +1,39 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "Service Now",
+            "intents": [
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "GetIncidents",
+                    "slots": [],
+                    "samples": [
+                        "nach einem Incident",
+                        "sage mir einen Incident",
+                        "gebe mir einen Incident aus"
+                    ]
+                }
+            ],
+            "types": []
+        }
+    }
+}
