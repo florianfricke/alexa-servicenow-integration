@@ -1,39 +1,36 @@
 {
-    "interactionModel": {
-        "languageModel": {
-            "invocationName": "Service Now",
-            "intents": [
-                {
-                    "name": "AMAZON.FallbackIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.CancelIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.HelpIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.StopIntent",
-                    "samples": []
-                },
-                {
-                    "name": "AMAZON.NavigateHomeIntent",
-                    "samples": []
-                },
-                {
-                    "name": "GetIncidents",
-                    "slots": [],
-                    "samples": [
-                        "nach einem Incident",
-                        "sage mir einen Incident",
-                        "gebe mir einen Incident aus"
-                    ]
-                }
-            ],
-            "types": []
+  "manifest": {
+    "publishingInformation": {
+      "locales": {
+        "en-GB": {
+          "summary": "Simple ServiceNow Skill",
+          "examplePhrases": [
+            "Alexa open servicenow"
+          ],
+          "name": "alexa-servicenow",
+          "description": "Connects to a ServiceNow instance and reads out 5 recent tickets",
+          "smallIconUri": "https://raw.githubusercontent.com/sanjayraina/alexa-servicenow/master/servicenowIcon.png"
         }
+      },
+      "isAvailableWorldwide": true,
+      "testingInstructions": "Sample Testing Instructions.",
+      "category": "BUSINESS_AND_FINANCE",
+      "distributionCountries": []
+    },
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "sourceDir": "lambda/custom"
+        }
+      }
+    },
+    "manifestVersion": "1.0",
+    "privacyAndCompliance": {
+      "allowsPurchases": false,
+      "isExportCompliant": true,
+      "containsAds": false,
+      "isChildDirected": false,
+      "usesPersonalInfo": false
     }
+  }
 }

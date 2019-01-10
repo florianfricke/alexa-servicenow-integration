@@ -1,0 +1,81 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "servicenow",
+      "types": [
+        {
+          "name": "TICKETS",
+          "values": [
+            {
+              "id": null,
+              "name": {
+                "value": "incidents",
+                "synonyms": []
+              }
+            },
+            {
+              "id": null,
+              "name": {
+                "value": "changes",
+                "synonyms": ["change requests"]
+              }
+            },
+            {
+              "id": null,
+              "name": {
+                "value": "requests",
+                "synonyms": []
+              }
+            },
+            {
+              "id": null,
+              "name": {
+                "value": "problems",
+                "synonyms": []
+              }
+            },
+            {
+              "id": null,
+              "name": {
+                "value": "approvals",
+                "synonyms": []
+              }
+            }
+          ]
+        }
+      ],
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": [
+
+          ]
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": [
+
+          ]
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": [
+
+          ]
+        },
+        {
+          "name": "ServiceNowIntent",
+          "slots": [
+            {
+              "name": "Tickets",
+              "type": "TICKETS"
+            }
+          ],
+          "samples": [
+            "Read out the recent {Tickets}"
+          ]
+        }
+      ]
+    }
+  }
+}
