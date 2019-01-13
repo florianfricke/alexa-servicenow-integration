@@ -7,35 +7,48 @@
           "name": "TICKETS",
           "values": [
             {
-              "id": null,
+              "id": "INCIDENT",
               "name": {
                 "value": "incidents",
-                "synonyms": []
+                "synonyms": [
+                  "störungen",
+                  "störungsmeldungen"
+                ]
               }
             },
             {
-              "id": null,
+              "id": "CHANGE",
               "name": {
                 "value": "changes",
-                "synonyms": ["change requests"]
+                "synonyms": [
+                  "change requests",
+                  "änderungen",
+                  "änderungsanfragen"
+                ]
               }
             },
             {
-              "id": null,
+              "id": "REQUESTS",
               "name": {
                 "value": "requests",
-                "synonyms": []
+                "synonyms": [
+                  "anfragen"
+                ]
               }
             },
             {
-              "id": null,
+              "id": "PROBLEME",
               "name": {
-                "value": "problems",
-                "synonyms": []
+                "value": "probleme",
+                "synonyms": [
+                  "problemen",
+                  "problems",
+                  "problemmeldungen"
+                ]
               }
             },
             {
-              "id": null,
+              "id": "APPROVALS",
               "name": {
                 "value": "approvals",
                 "synonyms": []
@@ -47,21 +60,15 @@
       "intents": [
         {
           "name": "AMAZON.CancelIntent",
-          "samples": [
-
-          ]
+          "samples": []
         },
         {
           "name": "AMAZON.HelpIntent",
-          "samples": [
-
-          ]
+          "samples": []
         },
         {
           "name": "AMAZON.StopIntent",
-          "samples": [
-
-          ]
+          "samples": []
         },
         {
           "name": "GetTicktetsIntent",
@@ -72,7 +79,11 @@
             }
           ],
           "samples": [
-            "Read out the recent {Tickets}"
+            "nach {Tickets}",
+            "geb mir {Tickets} aus",
+            "sage mir {Tickets} an",
+            "sage mir alle {Tickets} an",
+            "alle {Tickets} ansagen"
           ]
         }
       ]
