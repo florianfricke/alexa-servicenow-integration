@@ -2,7 +2,30 @@ const Alexa = require('ask-sdk-core');
 const https = require('https');
 const constants = require('./constants');
 
-// github: m.naake@web.de
+// ToDO: Help Message noch ändern -> erstellen, löschen..
+// ToDO: FACTS löschen
+
+const deData = {
+  translation: {
+    SKILL_NAME: 'Service Now',
+    WELCOME_MESSAGE = 'Willkommen im Service Now Skill. Was kann ich für Sie tun?',
+    REPROMT_MESSAGE = 'Wie kann ich Ihnen helfen?',
+    HELP_MESSAGE: 'Sie können sich verschiedene Tickets, wie beispielsweise Incidents, Changes und weitere ausgeben lassen. Sagen Sie einfach, „Gebe mir ein Incident aus.“',
+    FALLBACK_MESSAGE: 'Der Service Now Skill kann dir dabei leider nicht helfen.',
+    ERROR_MESSAGE: 'Das Kommando habe ich leider nicht erkannt. Probieren Sie es bitte erneut.',
+    CLOSE_MESSAGE: 'Auf Wiedersehen!',
+    AUTHENTIFICATION_FAILED_MESSAGE: 'Die Authentifizierung ist fehlgeschlagen.',
+    FACTS:
+      [
+        'Ein Jahr dauert auf dem Merkur nur 88 Tage.',
+        'Die Venus ist zwar weiter von der Sonne entfernt, hat aber höhere Temperaturen als Merkur.',
+        'Venus dreht sich entgegen dem Uhrzeigersinn, möglicherweise aufgrund eines früheren Zusammenstoßes mit einem Asteroiden.',
+        'Auf dem Mars erscheint die Sonne nur halb so groß wie auf der Erde.',
+        'Jupiter hat den kürzesten Tag aller Planeten.',
+      ],
+  },
+};
+
 
 var accessToken = "";
 
@@ -11,35 +34,33 @@ const LaunchRequestHandler = {
     return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
   },
   handle(handlerInput) {
-    const speechText = 'Welcome to the ServiceNow skill, how can I help?';
-
     accessToken = handlerInput.requestEnvelope.session.user.accessToken;
     
     return handlerInput.responseBuilder
-      .speak(speechText)
-      .reprompt(speechText)
+      .speak(deData.WELCOME_MESSAGE)
+      .reprompt(deData.REPROMT_MESSAGE)
       .getResponse();
   },
 };
 
-const ServiceNowIntentHandler = {
+const GetTicktetsIntentHandler = {
   canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-      && handlerInput.requestEnvelope.request.intent.name === 'ServiceNowIntent';
+      && handlerInput.requestEnvelope.request.intent.name === 'GetTicktetsIntent';
   },
   async handle(handlerInput) {
     
     if (!accessToken) {
-      speechText = 'You must authenticate with your Amazon Account to use this skill. Please use your Alexa App to continue';
       return handlerInput.responseBuilder
-        .speak(speechText)
-        .withLinkAccountCard()
+        .speak(deData.AUTHENTIFICATION_FAILED_MESSAGE)
+        .withLinkAccountCard() //??
         .getResponse();
     }
     else {
       const filledSlots = handlerInput.requestEnvelope.request.intent.slots;
       const ticketType = filledSlots.Tickets.value;
       let snowTable = '';
+      // get table names from service now: System Definition > Tables
       if (ticketType.indexOf('incident') == 0) {
         snowTable = 'incident';
       }
@@ -58,17 +79,13 @@ const ServiceNowIntentHandler = {
 
       const records = await getRecords(snowTable);       // Get the records
 
-      let speechText =  "Here are the 5 most recent " + ticketType + ": ";
+      let speechText =  "Die letzten 5 " + ticketType + " lauten:";
       for (let i = 0; i < 5; i++) {
-          var rec_number = i + 1;
-
-          speechText += "Record " + (i+1) + '<break time=".5s"/>' + records.result[i].short_description + ". ";
+          speechText += "Ticket " + (i+1) + '<break time=".5s"/>' + records.result[i].short_description + ". ";
         }
-      speechText += '<break time=".5s"/>' + "End of " + ticketType + ".";
 
       return handlerInput.responseBuilder
           .speak(speechText)
-          .withSimpleCard('Hello World', speechText)
           .getResponse();
         
     }
@@ -76,9 +93,9 @@ const ServiceNowIntentHandler = {
 };
 
 function getRecords(recType) {
-  const hdrAuth = "Bearer " + accessToken;
+  const hdrAuth = "Bearer " + accessToken; //??
 
-  return new Promise(((resolve, reject) => {
+  return new Promise(((resolve, reject) => { //??
     const snowInstance = constants.servicenow.instance;
 
     const options = {
@@ -98,20 +115,23 @@ function getRecords(recType) {
 
       if (response.statusCode < 200 || response.statusCode >= 300) {
         return reject(new Error(`${response.statusCode}: ${response.req.getHeader('host')} ${response.req.path}`));
+        //To Do
       }
 
       response.on('data', (chunk) => {
-
         returnData += chunk;
       });
 
       response.on('end', () => {
-        resolve(JSON.parse(returnData));
+        resolve(JSON.parse(returnData)); //??
       });
 
       response.on('error', (error) => {
-        reject(error);
-      });
+        reject(error); //??
+        //ToDo
+        //response({ 'errorType': 'error', 'errorText': 'Leider trat ein Fehler auf und es konnten keine Daten abgerufen werden. Bitte kontaktieren Sie Ihren Systemadministrator. Vielen Dank.' });
+
+      });   
     });
     request.end();
   }));
@@ -124,12 +144,9 @@ const HelpIntentHandler = {
       && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.HelpIntent';
   },
   handle(handlerInput) {
-    const speechText = 'You can say hello to me!';
-
     return handlerInput.responseBuilder
-      .speak(speechText)
-      .reprompt(speechText)
-      .withSimpleCard('Hello World', speechText)
+      .speak(deData.HELP_MESSAGE)
+      .reprompt(deData.REPROMT_MESSAGE)
       .getResponse();
   },
 };
@@ -141,11 +158,8 @@ const CancelAndStopIntentHandler = {
         || handlerInput.requestEnvelope.request.intent.name === 'AMAZON.StopIntent');
   },
   handle(handlerInput) {
-    const speechText = 'Goodbye!';
-
     return handlerInput.responseBuilder
-      .speak(speechText)
-      .withSimpleCard('Hello World', speechText)
+      .speak(deData.CLOSE_MESSAGE)
       .getResponse();
   },
 };
@@ -155,8 +169,9 @@ const SessionEndedRequestHandler = {
     return handlerInput.requestEnvelope.request.type === 'SessionEndedRequest';
   },
   handle(handlerInput) {
-
-    return handlerInput.responseBuilder.getResponse();
+    return handlerInput.responseBuilder
+      .speak(deData.CLOSE_MESSAGE)
+      .getResponse();
   },
 };
 
@@ -168,8 +183,8 @@ const ErrorHandler = {
     console.log(`Error handled: ${error.message}`);
 
     return handlerInput.responseBuilder
-      .speak('Sorry, I can\'t understand the command. Please say again.')
-      .reprompt('Sorry, I can\'t understand the command. Please say again.')
+      .speak(deData.ERROR_MESSAGE)
+      .reprompt(deData.ERROR_MESSAGE)
       .getResponse();
   },
 };
@@ -179,7 +194,7 @@ const skillBuilder = Alexa.SkillBuilders.custom();
 exports.handler = skillBuilder
   .addRequestHandlers(
     LaunchRequestHandler,
-    ServiceNowIntentHandler,
+    GetTicktetsIntentHandler,
     HelpIntentHandler,
     CancelAndStopIntentHandler,
     SessionEndedRequestHandler
