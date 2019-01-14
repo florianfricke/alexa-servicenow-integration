@@ -8,24 +8,15 @@ const constants = require('./constants');
 const deData = {
   translation: {
     SKILL_NAME: 'Service Now',
-    WELCOME_MESSAGE = 'Willkommen im Service Now Skill. Was kann ich für Sie tun?',
-    REPROMT_MESSAGE = 'Wie kann ich Ihnen helfen?',
+    WELCOME_MESSAGE: 'Willkommen im Service Now Skill. Was kann ich für Sie tun?',
+    REPROMT_MESSAGE: 'Wie kann ich Ihnen helfen?',
     HELP_MESSAGE: 'Sie können sich verschiedene Tickets, wie beispielsweise Incidents, Changes und weitere ausgeben lassen. Sagen Sie einfach, „Gebe mir ein Incident aus.“',
     FALLBACK_MESSAGE: 'Der Service Now Skill kann dir dabei leider nicht helfen.',
     ERROR_MESSAGE: 'Das Kommando habe ich leider nicht erkannt. Probieren Sie es bitte erneut.',
     CLOSE_MESSAGE: 'Auf Wiedersehen!',
-    AUTHENTIFICATION_FAILED_MESSAGE: 'Die Authentifizierung ist fehlgeschlagen.',
-    FACTS:
-      [
-        'Ein Jahr dauert auf dem Merkur nur 88 Tage.',
-        'Die Venus ist zwar weiter von der Sonne entfernt, hat aber höhere Temperaturen als Merkur.',
-        'Venus dreht sich entgegen dem Uhrzeigersinn, möglicherweise aufgrund eines früheren Zusammenstoßes mit einem Asteroiden.',
-        'Auf dem Mars erscheint die Sonne nur halb so groß wie auf der Erde.',
-        'Jupiter hat den kürzesten Tag aller Planeten.',
-      ],
+    AUTHENTIFICATION_FAILED_MESSAGE: 'Die Authentifizierung ist fehlgeschlagen.'
   },
 };
-
 
 var accessToken = "";
 
@@ -37,8 +28,8 @@ const LaunchRequestHandler = {
     accessToken = handlerInput.requestEnvelope.session.user.accessToken;
     
     return handlerInput.responseBuilder
-      .speak(deData.WELCOME_MESSAGE)
-      .reprompt(deData.REPROMT_MESSAGE)
+      .speak(deData.translation.WELCOME_MESSAGE)
+      .reprompt(deData.translation.REPROMT_MESSAGE)
       .getResponse();
   },
 };
@@ -52,13 +43,28 @@ const GetTicktetsIntentHandler = {
     
     if (!accessToken) {
       return handlerInput.responseBuilder
-        .speak(deData.AUTHENTIFICATION_FAILED_MESSAGE)
-        .withLinkAccountCard() //??
-        .getResponse();
+        .speak(deData.translation.AUTHENTIFICATION_FAILED_MESSAGE)
     }
     else {
       const filledSlots = handlerInput.requestEnvelope.request.intent.slots;
       const ticketType = filledSlots.Tickets.value;
+      let ticketNumbers = filledSlots.Ticketnumbers.value;
+      let timespan = filledSlots.Timespan.value;
+
+      console.log("Timespan: " + timespan);
+      console.log("ticketNumbers: " + ticketNumbers);
+
+
+      if (typeof ticketNumbers === 'undefined' || ticketNumbers === '?') {
+        ticketNumbers = 1;
+      }
+
+      if (typeof timespan === 'undefined') {
+        timespan = 'letzten';
+      }
+      console.log("Timespan after: " + timespan);
+      console.log("ticketNumbers after: " + ticketNumbers);
+      
       let snowTable = '';
       // get table names from service now: System Definition > Tables
       if (ticketType.indexOf('incident') == 0) {
@@ -77,12 +83,23 @@ const GetTicktetsIntentHandler = {
         snowTable = 'sysapproval_approver';
       }
 
-      const records = await getRecords(snowTable);       // Get the records
+      const records = await getRecords(snowTable, ticketNumbers, timespan);       // Get the records
 
-      let speechText =  "Die letzten 5 " + ticketType + " lauten:";
-      for (let i = 0; i < 5; i++) {
-          speechText += "Ticket " + (i+1) + '<break time=".5s"/>' + records.result[i].short_description + ". ";
+      let speechText;
+      if (ticketNumbers === 1) {
+        if (timespan === 'letzten') {
+          timespan = 'letzte';
         }
+        else if (timespan === 'ältesten') {
+          timespan = 'älteste';
+        }
+        speechText = 'Das ' + timespan + ' ' + ticketType + ' Ticket lautet: <break time=".5s" />' + records.result[0].short_description + '. ';
+      } else {
+        speechText = 'Die ' + timespan + ' ' + + ticketNumbers + ' ' + ticketType + ' lauten: <break time=".5s" />';
+        for (let i = 0; i < ticketNumbers; i++) {
+          speechText += "Ticket " + (i + 1) + '<break time=".5s"/>' + records.result[i].short_description + ". ";
+        }
+      }
 
       return handlerInput.responseBuilder
           .speak(speechText)
@@ -92,8 +109,14 @@ const GetTicktetsIntentHandler = {
   }
 };
 
-function getRecords(recType) {
+function getRecords(recType, ticketNumbers, timespan) {
   const hdrAuth = "Bearer " + accessToken; //??
+  let sort = 'DESC';
+
+  if (timespan === "ältesten" || timespan === "älteste" || timespan === "spätesten" || timespan === "spätesteste") {
+    sort = 'ASC';
+  }
+  console.log("Sortierung: ", sort);
 
   return new Promise(((resolve, reject) => { //??
     const snowInstance = constants.servicenow.instance;
@@ -101,7 +124,7 @@ function getRecords(recType) {
     const options = {
       hostname: snowInstance,
       port: 443,
-      path: '/api/now/table/' + recType + '?sysparm_query=ORDERBYDESCsys_updated_on&sysparm_limit=5',
+      path: '/api/now/table/' + recType + '?sysparm_query=ORDERBY'+ sort +'sys_updated_on&sysparm_limit=' + ticketNumbers,
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -124,6 +147,7 @@ function getRecords(recType) {
 
       response.on('end', () => {
         resolve(JSON.parse(returnData)); //??
+        console.log(JSON.parse(returnData));
       });
 
       response.on('error', (error) => {
@@ -145,8 +169,8 @@ const HelpIntentHandler = {
   },
   handle(handlerInput) {
     return handlerInput.responseBuilder
-      .speak(deData.HELP_MESSAGE)
-      .reprompt(deData.REPROMT_MESSAGE)
+      .speak(deData.translation.HELP_MESSAGE)
+      .reprompt(deData.translation.REPROMT_MESSAGE)
       .getResponse();
   },
 };
@@ -159,7 +183,7 @@ const CancelAndStopIntentHandler = {
   },
   handle(handlerInput) {
     return handlerInput.responseBuilder
-      .speak(deData.CLOSE_MESSAGE)
+      .speak(deData.translation.CLOSE_MESSAGE)
       .getResponse();
   },
 };
@@ -170,7 +194,7 @@ const SessionEndedRequestHandler = {
   },
   handle(handlerInput) {
     return handlerInput.responseBuilder
-      .speak(deData.CLOSE_MESSAGE)
+      .speak(deData.translation.CLOSE_MESSAGE)
       .getResponse();
   },
 };
@@ -183,8 +207,8 @@ const ErrorHandler = {
     console.log(`Error handled: ${error.message}`);
 
     return handlerInput.responseBuilder
-      .speak(deData.ERROR_MESSAGE)
-      .reprompt(deData.ERROR_MESSAGE)
+      .speak(deData.translation.ERROR_MESSAGE)
+      .reprompt(deData.translation.ERROR_MESSAGE)
       .getResponse();
   },
 };

@@ -4,6 +4,36 @@
       "invocationName": "servicenow",
       "types": [
         {
+          "name": "TIMESPAN",
+          "values": [
+            {
+              "id": "LAST",
+              "name": {
+                "value": "ältesten",
+                "synonyms": [
+                  "älteste",
+                  "spätesten",
+                  "spätesteste"
+                ]
+              }
+            },
+            {
+              "id": "CURRENT",
+              "name": {
+                "value": "letzten",
+                "synonyms": [
+                  "letzte",
+                  "aktuellsten",
+                  "aktuellen",
+                  "aktuell",
+                  "derzeitig",
+                  "derzeitigen"
+                ]
+              }
+            }
+          ]
+        },
+        {
           "name": "TICKETS",
           "values": [
             {
@@ -46,13 +76,6 @@
                   "problemmeldungen"
                 ]
               }
-            },
-            {
-              "id": "APPROVALS",
-              "name": {
-                "value": "approvals",
-                "synonyms": []
-              }
             }
           ]
         }
@@ -76,14 +99,31 @@
             {
               "name": "Tickets",
               "type": "TICKETS"
+            },
+            {
+              "name": "Timespan",
+              "type": "TIMESPAN"
+            },
+            {
+              "name": "Ticketnumbers",
+              "type": "AMAZON.NUMBER"
             }
           ],
           "samples": [
             "nach {Tickets}",
-            "geb mir {Tickets} aus",
-            "sage mir {Tickets} an",
-            "sage mir alle {Tickets} an",
-            "alle {Tickets} ansagen"
+            "nach dem {Timespan} {Ticketnumbers} {Tickets}",
+            "nach {Ticketnumbers} {Tickets}",
+            "geb mir die {Ticketnumbers} {Tickets} aus",
+            "geb mir den {Ticketnumbers} {Tickets} aus",
+            "geb mir den {Ticketnumbers} {Tickets} aus",
+            "geb mir den {Timespan} {Tickets} aus",
+            "geb mir das {Timespan} {Tickets} Ticket aus",
+            "sage mir {Ticketnumbers} {Tickets} an",
+            "sage mir die {Timespan} {Ticketnumbers} {Tickets} an",
+            "die {Timespan} {Ticketnumbers} {Tickets} ansagen",
+            "sage mir alle {Timespan} {Tickets} an",
+            "alle {Tickets} ansagen",
+            "alle {Timespan} {Tickets} ansagen"
           ]
         }
       ]
