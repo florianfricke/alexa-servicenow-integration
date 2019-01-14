@@ -58,15 +58,6 @@
               }
             },
             {
-              "id": "REQUESTS",
-              "name": {
-                "value": "requests",
-                "synonyms": [
-                  "anfragen"
-                ]
-              }
-            },
-            {
               "id": "PROBLEME",
               "name": {
                 "value": "probleme",
