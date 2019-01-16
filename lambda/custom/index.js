@@ -73,14 +73,8 @@ const GetTicktetsIntentHandler = {
       else if (ticketType.indexOf('change') == 0) {
         snowTable = 'change_request';
       }
-      else if (ticketType.indexOf('request') == 0) {
-        snowTable = 'sc_req_item';
-      }
       else if (ticketType.indexOf('problem') == 0) {
         snowTable = 'problem';
-      }
-      else if (ticketType.indexOf('approval') == 0) {
-        snowTable = 'sysapproval_approver';
       }
 
       const records = await getRecords(snowTable, ticketNumbers, timespan);       // Get the records

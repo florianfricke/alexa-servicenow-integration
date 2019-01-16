@@ -23,7 +23,7 @@
             "eTag": "15d3c39a7ffec9f28efd57789e81070d"
           },
           "de-DE": {
-            "eTag": "3af69e105ae61249e3d0580ee142d4dd"
+            "eTag": "8568f7d38d92ec2f19f48b5c667e1923"
           }
         },
         "lambda": [
@@ -36,7 +36,7 @@
             "codeUri": "lambda/custom",
             "functionName": "servicenow-integration",
             "handler": "index.handler",
-            "revisionId": "eecb760d-7e2d-4768-abcb-3058503f0dd0",
+            "revisionId": "7b8bd939-d770-4bda-8347-d7ea92ba74fe",
             "runtime": "nodejs8.10"
           }
         ]
