@@ -1,4 +1,5 @@
 
+// ToDO: Help Message noch ändern -> erstellen, löschen..
 exports.deData = {
     translation: {
         SKILL_NAME: 'Service Now',
