@@ -58,14 +58,13 @@ exports.RemoveTicktetsIntentHandler = {
                 else if (timespan === 'ältesten') {
                     timespan = 'älteste';
                 }
-                speechText = 'Das ' + timespan + ' ' + ticketType + ' Ticket lautet: <break time=".5s" />' + records.result[0].short_description + '. ';
+                setRecordComplete(records.result[0].sys_id);
             } else {
-                speechText = 'Die ' + timespan + ' ' + + ticketNumbers + ' ' + ticketType + ' lauten: <break time=".5s" />';
                 for (let i = 0; i < ticketNumbers; i++) {
-                    speechText += "Ticket " + (i + 1) + '<break time=".5s"/>' + records.result[i].short_description + ". ";
+                    setRecordComplete(records.result[i].sys_id);
                 }
             }
-            speechText += "Was kann ich noch für Sie tun?";
+            speechText += "Die gewählten Tickets wurden auf Complete gesetzt. Was kann ich noch für Sie tun?";
 
             return handlerInput.responseBuilder
                 .speak(speechText)
@@ -74,6 +73,28 @@ exports.RemoveTicktetsIntentHandler = {
         }
     }
 };
+
+function setRecordComplete(sys_id) 
+{
+    var requestBody = "{\"state\":\"7\"}"; 
+
+    var client=new XMLHttpRequest();
+    client.open("put","https://dev71109.service-now.com/api/now/table/incident/" + sys_id);
+
+    client.setRequestHeader('Accept','application/json');
+    client.setRequestHeader('Content-Type','application/json');
+
+    //Eg. UserName="admin", Password="admin" for this code sample.
+    client.setRequestHeader('Authorization', 'Basic '+btoa('admin'+':'+'admin'));
+
+    client.onreadystatechange = function() { 
+        if(this.readyState == this.DONE) {
+            document.getElementById("response").innerHTML=this.status + this.response; 
+        }
+    }; 
+    client.send(requestBody);
+};
+
 
 function getRecords(recType, ticketNumbers, timespan) {
     const hdrAuth = "Bearer " + accessToken; //??
