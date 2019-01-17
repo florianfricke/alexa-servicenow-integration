@@ -7,8 +7,8 @@ exports.CreateTicketsIntentHandler = {
     canHandle(handlerInput) {
         accessToken = handlerInput.requestEnvelope.session.user.accessToken;
 
-        return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-            && handlerInput.requestEnvelope.request.intent.name === 'CreateTicketsIntent';
+        return handlerInput.requestEnvelope.request.type == 'IntentRequest'
+            && handlerInput.requestEnvelope.request.intent.name == 'CreateTicketsIntent';
     },
     async handle(handlerInput) {
 
@@ -20,20 +20,14 @@ exports.CreateTicketsIntentHandler = {
             const filledSlots = handlerInput.requestEnvelope.request.intent.slots;
             const ticketType = filledSlots.Tickets.value;
             let ticketNumbers = filledSlots.Ticketnumbers.value;
-            let timespan = filledSlots.Timespan.value;
 
-            console.log("Timespan: " + timespan);
             console.log("ticketNumbers: " + ticketNumbers);
 
 
-            if (typeof ticketNumbers === 'undefined' || ticketNumbers === '?') {
+            if (typeof ticketNumbers == 'undefined' || ticketNumbers == '?') {
                 ticketNumbers = 1;
             }
 
-            if (typeof timespan === 'undefined') {
-                timespan = 'letzten';
-            }
-            console.log("Timespan after: " + timespan);
             console.log("ticketNumbers after: " + ticketNumbers);
 
             let serviceNowTable = '';
@@ -48,22 +42,14 @@ exports.CreateTicketsIntentHandler = {
                 serviceNowTable = 'problem';
             }
 
-            const records = await getRecords(serviceNowTable, ticketNumbers, timespan);       // Get the records
-
+            const records = await setRecords(serviceNowTable);
+            
             let speechText;
-            if (ticketNumbers === 1) {
-                if (timespan === 'letzten') {
-                    timespan = 'letzte';
-                }
-                else if (timespan === 'ältesten') {
-                    timespan = 'älteste';
-                }
-                speechText = 'Das ' + timespan + ' ' + ticketType + ' Ticket lautet: <break time=".5s" />' + records.result[0].short_description + '. ';
+            if (ticketNumbers == 1) {
+                speechText = 'Das ' + ticketType + ' Ticket wurde angelegt.';
+                //  + records.result[0].short_description + '. ';
             } else {
-                speechText = 'Die ' + timespan + ' ' + + ticketNumbers + ' ' + ticketType + ' lauten: <break time=".5s" />';
-                for (let i = 0; i < ticketNumbers; i++) {
-                    speechText += "Ticket " + (i + 1) + '<break time=".5s"/>' + records.result[i].short_description + ". ";
-                }
+                speechText = 'Die ' + ticketNumbers + ' ' + ticketType + ' Tickets wurden angelegt.';
             }
             speechText += "Was kann ich noch für Sie tun?";
 
@@ -75,23 +61,25 @@ exports.CreateTicketsIntentHandler = {
     }
 };
 
-function getRecords(recType, ticketNumbers, timespan) {
+function setRecords(recType) {
     const hdrAuth = "Bearer " + accessToken; //??
     let sort = 'DESC';
 
-    if (timespan === "ältesten" || timespan === "älteste" || timespan === "spätesten" || timespan === "spätesteste") {
-        sort = 'ASC';
-    }
     console.log("Sortierung: ", sort);
 
     return new Promise(((resolve, reject) => { //??
         const serviceNowInstance = constants.servicenow.instance;
 
+        const data = JSON.stringify({
+            caller_id: 'Abel Tuter',
+            short_description: 'Computer kaputt',
+        });
+
         const options = {
             hostname: serviceNowInstance,
             port: 443,
-            path: '/api/now/table/' + recType + '?sysparm_query=ORDERBY' + sort + 'sys_updated_on&sysparm_limit=' + ticketNumbers,
-            method: 'GET',
+            path: '/api/now/table/' + recType,
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: hdrAuth
@@ -100,15 +88,13 @@ function getRecords(recType, ticketNumbers, timespan) {
 
         const request = https.request(options, (response) => {
             response.setEncoding('utf8');
-            let returnData = '';
 
             if (response.statusCode < 200 || response.statusCode >= 300) {
                 return reject(new Error(`${response.statusCode}: ${response.req.getHeader('host')} ${response.req.path}`));
-                //To Do
             }
 
-            response.on('data', (chunk) => {
-                returnData += chunk;
+            response.on('data', (d) => {
+                process.stdout.write(d);
             });
 
             response.on('end', () => {
@@ -123,6 +109,8 @@ function getRecords(recType, ticketNumbers, timespan) {
 
             });
         });
+        request.write(data)
         request.end();
+
     }));
 }
