@@ -1,22 +1,10 @@
 const Alexa = require('ask-sdk-core');
 const https = require('https');
 const constants = require('./constants');
+const language = require('./language');
 
 // ToDO: Help Message noch ändern -> erstellen, löschen..
 // ToDO: FACTS löschen
-
-const deData = {
-  translation: {
-    SKILL_NAME: 'Service Now',
-    WELCOME_MESSAGE: 'Willkommen im Service Now Skill. Was kann ich für Sie tun?',
-    REPROMT_MESSAGE: 'Wie kann ich Ihnen helfen?',
-    HELP_MESSAGE: 'Sie können sich verschiedene Tickets, wie beispielsweise Incidents, Changes und weitere ausgeben lassen. Sagen Sie einfach, „Gebe mir ein Incident aus.“',
-    FALLBACK_MESSAGE: 'Der Service Now Skill kann dir dabei leider nicht helfen.',
-    ERROR_MESSAGE: 'Das Kommando habe ich leider nicht erkannt. Probieren Sie es bitte erneut.',
-    CLOSE_MESSAGE: 'Auf Wiedersehen!',
-    AUTHENTIFICATION_FAILED_MESSAGE: 'Die Authentifizierung ist fehlgeschlagen.'
-  },
-};
 
 var accessToken = "";
 
@@ -28,8 +16,8 @@ const LaunchRequestHandler = {
     accessToken = handlerInput.requestEnvelope.session.user.accessToken;
     
     return handlerInput.responseBuilder
-      .speak(deData.translation.WELCOME_MESSAGE)
-      .reprompt(deData.translation.REPROMT_MESSAGE)
+      .speak(language.deData.translation.WELCOME_MESSAGE)
+      .reprompt(language.deData.translation.REPROMT_MESSAGE)
       .getResponse();
   },
 };
@@ -43,7 +31,7 @@ const GetTicktetsIntentHandler = {
     
     if (!accessToken) {
       return handlerInput.responseBuilder
-        .speak(deData.translation.AUTHENTIFICATION_FAILED_MESSAGE)
+        .speak(language.deData.translation.AUTHENTIFICATION_FAILED_MESSAGE)
     }
     else {
       const filledSlots = handlerInput.requestEnvelope.request.intent.slots;
@@ -65,19 +53,19 @@ const GetTicktetsIntentHandler = {
       console.log("Timespan after: " + timespan);
       console.log("ticketNumbers after: " + ticketNumbers);
       
-      let snowTable = '';
+      let serviceNowTable = '';
       // get table names from service now: System Definition > Tables
       if (ticketType.indexOf('incident') == 0) {
-        snowTable = 'incident';
+        serviceNowTable = 'incident';
       }
       else if (ticketType.indexOf('change') == 0) {
-        snowTable = 'change_request';
+        serviceNowTable = 'change_request';
       }
       else if (ticketType.indexOf('problem') == 0) {
-        snowTable = 'problem';
+        serviceNowTable = 'problem';
       }
 
-      const records = await getRecords(snowTable, ticketNumbers, timespan);       // Get the records
+      const records = await getRecords(serviceNowTable, ticketNumbers, timespan);       // Get the records
 
       let speechText;
       if (ticketNumbers === 1) {
@@ -94,11 +82,12 @@ const GetTicktetsIntentHandler = {
           speechText += "Ticket " + (i + 1) + '<break time=".5s"/>' + records.result[i].short_description + ". ";
         }
       }
+      speechText += "Was kann ich noch für Sie tun?";
 
       return handlerInput.responseBuilder
           .speak(speechText)
+          .withShouldEndSession(false)
           .getResponse();
-        
     }
   }
 };
@@ -113,10 +102,10 @@ function getRecords(recType, ticketNumbers, timespan) {
   console.log("Sortierung: ", sort);
 
   return new Promise(((resolve, reject) => { //??
-    const snowInstance = constants.servicenow.instance;
+    const serviceNowInstance = constants.servicenow.instance;
 
     const options = {
-      hostname: snowInstance,
+      hostname: serviceNowInstance,
       port: 443,
       path: '/api/now/table/' + recType + '?sysparm_query=ORDERBY'+ sort +'sys_updated_on&sysparm_limit=' + ticketNumbers,
       method: 'GET',
@@ -155,7 +144,6 @@ function getRecords(recType, ticketNumbers, timespan) {
   }));
 }
 
-
 const HelpIntentHandler = {
   canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest'
@@ -163,8 +151,8 @@ const HelpIntentHandler = {
   },
   handle(handlerInput) {
     return handlerInput.responseBuilder
-      .speak(deData.translation.HELP_MESSAGE)
-      .reprompt(deData.translation.REPROMT_MESSAGE)
+      .speak(language.deData.translation.HELP_MESSAGE)
+      .reprompt(language.deData.translation.REPROMT_MESSAGE)
       .getResponse();
   },
 };
@@ -177,7 +165,7 @@ const CancelAndStopIntentHandler = {
   },
   handle(handlerInput) {
     return handlerInput.responseBuilder
-      .speak(deData.translation.CLOSE_MESSAGE)
+      .speak(language.deData.translation.CLOSE_MESSAGE)
       .getResponse();
   },
 };
@@ -188,7 +176,7 @@ const SessionEndedRequestHandler = {
   },
   handle(handlerInput) {
     return handlerInput.responseBuilder
-      .speak(deData.translation.CLOSE_MESSAGE)
+      .speak(language.deData.translation.CLOSE_MESSAGE)
       .getResponse();
   },
 };
@@ -201,8 +189,8 @@ const ErrorHandler = {
     console.log(`Error handled: ${error.message}`);
 
     return handlerInput.responseBuilder
-      .speak(deData.translation.ERROR_MESSAGE)
-      .reprompt(deData.translation.ERROR_MESSAGE)
+      .speak(language.deData.translation.ERROR_MESSAGE)
+      .reprompt(language.deData.translation.ERROR_MESSAGE)
       .getResponse();
   },
 };

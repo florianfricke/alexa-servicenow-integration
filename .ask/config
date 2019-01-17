@@ -20,10 +20,10 @@
         },
         "interactionModel": {
           "en-GB": {
-            "eTag": "15d3c39a7ffec9f28efd57789e81070d"
+            "eTag": "10f43e0cf6a9f86632e8868d1b043fe8"
           },
           "de-DE": {
-            "eTag": "8568f7d38d92ec2f19f48b5c667e1923"
+            "eTag": "07e0851366a04f7e4a2f66e2f64b44c0"
           }
         },
         "lambda": [
@@ -36,7 +36,7 @@
             "codeUri": "lambda/custom",
             "functionName": "servicenow-integration",
             "handler": "index.handler",
-            "revisionId": "7b8bd939-d770-4bda-8347-d7ea92ba74fe",
+            "revisionId": "754cd93b-2fb4-4f79-aeaa-0038b0b0702a",
             "runtime": "nodejs8.10"
           }
         ]
