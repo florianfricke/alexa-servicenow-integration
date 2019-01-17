@@ -14,7 +14,7 @@
           ],
           "name": "Service Now Integration",
           "description": "Connects to a ServiceNow instance and reads different number of tickets. Allows Additionally to delete and build Service Now tickets like incidents, problems and changes. ",
-          "smallIconUri": "https://raw.githubusercontent.com/sanjayraina/alexa-servicenow/master/servicenowIcon.png"
+          "smallIconUri": "https://github.com/florianfricke/alexa-servicenow-integration/blob/master/servicenowIcon.png"
         },
         "de-DE": {
           "summary": "Verwalten von Tickets im Service Now",
@@ -28,7 +28,7 @@
           ],
           "name": "Service Now Integration",
           "description": "Verbindet zu einer Service Now Instanz und liest eine verschieden Anzahl von Tickets aus. Erlaubt weiterhin das Erstellen und Löschen von von Tickets wie Problems, Changes und Incidents.",
-          "smallIconUri": "https://raw.githubusercontent.com/sanjayraina/alexa-servicenow/master/servicenowIcon.png"
+          "smallIconUri": "https://github.com/florianfricke/alexa-servicenow-integration/blob/master/servicenowIcon.png"
         }
       },
       "isAvailableWorldwide": true,
