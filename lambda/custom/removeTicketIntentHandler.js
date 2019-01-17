@@ -7,8 +7,8 @@ exports.RemoveTicktetsIntentHandler = {
     canHandle(handlerInput) {
         accessToken = handlerInput.requestEnvelope.session.user.accessToken;
 
-        return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-            && handlerInput.requestEnvelope.request.intent.name === 'RemoveTicktetsIntent';
+        return handlerInput.requestEnvelope.request.type == 'IntentRequest'
+            && handlerInput.requestEnvelope.request.intent.name == 'RemoveTicktetsIntent';
     },
     async handle(handlerInput) {
 
@@ -26,11 +26,11 @@ exports.RemoveTicktetsIntentHandler = {
             console.log("ticketNumbers: " + ticketNumbers);
 
 
-            if (typeof ticketNumbers === 'undefined' || ticketNumbers === '?') {
+            if (typeof ticketNumbers == 'undefined' || ticketNumbers == '?') {
                 ticketNumbers = 1;
             }
 
-            if (typeof timespan === 'undefined') {
+            if (typeof timespan == 'undefined') {
                 timespan = 'letzten';
             }
             console.log("Timespan after: " + timespan);
@@ -51,17 +51,13 @@ exports.RemoveTicktetsIntentHandler = {
             const records = await getRecords(serviceNowTable, ticketNumbers, timespan);       // Get the records
 
             let speechText;
-            if (ticketNumbers === 1) {
-                if (timespan === 'letzten') {
-                    timespan = 'letzte';
-                }
-                else if (timespan === 'ältesten') {
-                    timespan = 'älteste';
-                }
-                setRecordComplete(records.result[0].sys_id);
+            if (ticketNumbers == 1) {
+                console.log("Sys_ID: " + records.result[0].sys_id);
+                await setRecordComplete(serviceNowTable, records.result[0].sys_id);
             } else {
                 for (let i = 0; i < ticketNumbers; i++) {
-                    setRecordComplete(records.result[i].sys_id);
+                    console.log("Sys_ID2: " + records.result[i].sys_id);
+                    await setRecordComplete(serviceNowTable, records.result[i].sys_id);
                 }
             }
             speechText += "Die gewählten Tickets wurden auf Complete gesetzt. Was kann ich noch für Sie tun?";
@@ -74,33 +70,85 @@ exports.RemoveTicktetsIntentHandler = {
     }
 };
 
-function setRecordComplete(sys_id) 
-{
-    var requestBody = "{\"state\":\"7\"}"; 
+// function setRecordComplete(sys_id) 
+// {
+//     var requestBody = "{\"state\":\"7\"}"; 
 
-    var client=new XMLHttpRequest();
-    client.open("put","https://dev71109.service-now.com/api/now/table/incident/" + sys_id);
+//     var client=new XMLHttpRequest();
+//     client.open("put","https://dev71109.service-now.com/api/now/table/incident/" + sys_id);
 
-    client.setRequestHeader('Accept','application/json');
-    client.setRequestHeader('Content-Type','application/json');
+//     client.setRequestHeader('Accept','application/json');
+//     client.setRequestHeader('Content-Type','application/json');
 
-    //Eg. UserName="admin", Password="admin" for this code sample.
-    client.setRequestHeader('Authorization', 'Basic '+btoa('admin'+':'+'admin'));
+//     //Eg. UserName="admin", Password="admin" for this code sample.
+//     client.setRequestHeader('Authorization', 'Basic '+btoa('admin'+':'+'admin'));
 
-    client.onreadystatechange = function() { 
-        if(this.readyState == this.DONE) {
-            document.getElementById("response").innerHTML=this.status + this.response; 
-        }
-    }; 
-    client.send(requestBody);
-};
+//     client.onreadystatechange = function() { 
+//         if(this.readyState == this.DONE) {
+//             document.getElementById("response").innerHTML=this.status + this.response; 
+//         }
+//     }; 
+//     client.send(requestBody);
+// };
+
+function setRecordComplete(recType, sys_id) {
+    const hdrAuth = "Bearer " + accessToken; //??
+    
+    return new Promise(((resolve, reject) => { //??
+        const serviceNowInstance = constants.servicenow.instance;
+        
+        const data = JSON.stringify({
+            state: '7'
+        });
+
+        console.log("Sys_ID3: " + sys_id)
+        
+        const options = {
+            hostname: serviceNowInstance,
+            port: 443,
+            path: '/api/now/table/' + recType + "/" + sys_id,
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: hdrAuth
+            }
+        };
+
+        const request = https.request(options, (response) => {
+            response.setEncoding('utf8');
+            let returnData = '';
+
+            if (response.statusCode < 200 || response.statusCode >= 300) {
+                return reject(new Error(`${response.statusCode}: ${response.req.getHeader('host')} ${response.req.path}`));
+            }
+
+            response.on('data', (d) => {
+                process.stdout.write(d);
+            });
+
+            response.on('end', () => {
+                resolve(JSON.parse(returnData)); //??
+                console.log(JSON.parse(returnData));
+            });
+
+            response.on('error', (error) => {
+                reject(error); //??
+                //ToDo
+                //response({ 'errorType': 'error', 'errorText': 'Leider trat ein Fehler auf und es konnten keine Daten abgerufen werden. Bitte kontaktieren Sie Ihren Systemadministrator. Vielen Dank.' });
+
+            });
+        });
+        request.write(data)
+        request.end();
+    }));
+}
 
 
 function getRecords(recType, ticketNumbers, timespan) {
     const hdrAuth = "Bearer " + accessToken; //??
     let sort = 'DESC';
 
-    if (timespan === "ältesten" || timespan === "älteste" || timespan === "spätesten" || timespan === "spätesteste") {
+    if (timespan == "ältesten" || timespan == "älteste" || timespan == "spätesten" || timespan == "spätesteste") {
         sort = 'ASC';
     }
     console.log("Sortierung: ", sort);

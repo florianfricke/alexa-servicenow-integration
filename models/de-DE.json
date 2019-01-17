@@ -138,7 +138,8 @@
             "lösche den {Timespan} {Tickets}",
             "lösche mir den {Timespan} {Tickets} an",
             "lösche die {Timespan} {Ticketnumbers} {Tickets}",
-            "lösche mir die {Timespan} {Ticketnumbers} {Tickets}"
+            "lösche mir die {Timespan} {Ticketnumbers} {Tickets}",
+            "lösche mir das {Timespan} {Ticketnumbers} {Tickets}"
           ]
         },
         {
