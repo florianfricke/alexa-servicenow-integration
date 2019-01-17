@@ -134,20 +134,11 @@
             }
           ],
           "samples": [
-            "nach {Tickets}",
-            "nach dem {Timespan} {Ticketnumbers} {Tickets}",
-            "nach {Ticketnumbers} {Tickets}",
-            "gib mir die {Ticketnumbers} {Tickets} aus",
-            "gib mir den {Ticketnumbers} {Tickets} aus",
-            "gib mir den {Ticketnumbers} {Tickets} aus",
-            "gib mir den {Timespan} {Tickets} aus",
-            "gib mir das {Timespan} {Tickets} Ticket aus",
-            "sage mir {Ticketnumbers} {Tickets} an",
-            "sage mir die {Timespan} {Ticketnumbers} {Tickets} an",
-            "die {Timespan} {Ticketnumbers} {Tickets} ansagen",
-            "sage mir alle {Timespan} {Tickets} an",
-            "alle {Tickets} ansagen",
-            "alle {Timespan} {Tickets} ansagen"
+            "lösche {Ticketnumbers} {Tickets}",
+            "lösche den {Timespan} {Tickets}",
+            "lösche mir den {Timespan} {Tickets} an",
+            "lösche die {Timespan} {Ticketnumbers} {Tickets}",
+            "lösche mir die {Timespan} {Ticketnumbers} {Tickets}"
           ]
         },
         {
@@ -158,29 +149,16 @@
               "type": "TICKETS"
             },
             {
-              "name": "Timespan",
-              "type": "TIMESPAN"
-            },
-            {
               "name": "Ticketnumbers",
               "type": "AMAZON.NUMBER"
             }
           ],
           "samples": [
-            "nach {Tickets}",
-            "nach dem {Timespan} {Ticketnumbers} {Tickets}",
-            "nach {Ticketnumbers} {Tickets}",
-            "gib mir die {Ticketnumbers} {Tickets} aus",
-            "gib mir den {Ticketnumbers} {Tickets} aus",
-            "gib mir den {Ticketnumbers} {Tickets} aus",
-            "gib mir den {Timespan} {Tickets} aus",
-            "gib mir das {Timespan} {Tickets} Ticket aus",
-            "sage mir {Ticketnumbers} {Tickets} an",
-            "sage mir die {Timespan} {Ticketnumbers} {Tickets} an",
-            "die {Timespan} {Ticketnumbers} {Tickets} ansagen",
-            "sage mir alle {Timespan} {Tickets} an",
-            "alle {Tickets} ansagen",
-            "alle {Timespan} {Tickets} ansagen"
+            "erstelle {Ticketnumbers} {Tickets}",
+            "erstelle mir {Ticketnumbers} {Tickets}",
+            "erstelle {Ticketnumbers} neue {Tickets}",
+            "füge mir {Ticketnumbers} {Tickets} ein",
+            "füge mir {Ticketnumbers} {Tickets} hinzu"
           ]
         }
       ]
