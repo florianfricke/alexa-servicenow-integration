@@ -19,16 +19,6 @@ exports.CreateTicketsIntentHandler = {
         else {
             const filledSlots = handlerInput.requestEnvelope.request.intent.slots;
             const ticketType = filledSlots.Tickets.value;
-            let ticketNumbers = filledSlots.Ticketnumbers.value;
-
-            console.log("ticketNumbers: " + ticketNumbers);
-
-
-            if (typeof ticketNumbers == 'undefined' || ticketNumbers == '?') {
-                ticketNumbers = 1;
-            }
-
-            console.log("ticketNumbers after: " + ticketNumbers);
 
             let serviceNowTable = '';
             // get table names from service now: System Definition > Tables
@@ -45,12 +35,7 @@ exports.CreateTicketsIntentHandler = {
             const records = await setRecords(serviceNowTable);
             
             let speechText;
-            if (ticketNumbers == 1) {
-                speechText = 'Das ' + ticketType + ' Ticket wurde angelegt.';
-                //  + records.result[0].short_description + '. ';
-            } else {
-                speechText = 'Die ' + ticketNumbers + ' ' + ticketType + ' Tickets wurden angelegt.';
-            }
+            speechText = 'Das ' + ticketType + ' Ticket mit der Nummer '+ records.result[0].number + 'wurde angelegt.';
             speechText += "Was kann ich noch für Sie tun?";
 
             return handlerInput.responseBuilder
@@ -63,16 +48,13 @@ exports.CreateTicketsIntentHandler = {
 
 function setRecords(recType) {
     const hdrAuth = "Bearer " + accessToken; //??
-    let sort = 'DESC';
-
-    console.log("Sortierung: ", sort);
 
     return new Promise(((resolve, reject) => { //??
         const serviceNowInstance = constants.servicenow.instance;
 
         const data = JSON.stringify({
             caller_id: 'Abel Tuter',
-            short_description: 'Computer kaputt',
+            short_description: 'Der Bildschirm funktioniert nicht!',
         });
 
         const options = {
@@ -99,7 +81,7 @@ function setRecords(recType) {
 
             response.on('end', () => {
                 resolve(JSON.parse(returnData)); //??
-                console.log(JSON.parse(returnData));
+                console.log("service now json: " + JSON.parse(returnData));
             });
 
             response.on('error', (error) => {
@@ -109,8 +91,10 @@ function setRecords(recType) {
 
             });
         });
-        request.write(data)
+        console.log("Before write");
+        request.write(data);
+        console.log("After write");
         request.end();
-
+        console.log("After End");
     }));
 }

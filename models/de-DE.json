@@ -148,18 +148,16 @@
             {
               "name": "Tickets",
               "type": "TICKETS"
-            },
-            {
-              "name": "Ticketnumbers",
-              "type": "AMAZON.NUMBER"
             }
           ],
           "samples": [
-            "erstelle {Ticketnumbers} {Tickets}",
-            "erstelle mir {Ticketnumbers} {Tickets}",
-            "erstelle {Ticketnumbers} neue {Tickets}",
-            "füge mir {Ticketnumbers} {Tickets} ein",
-            "füge mir {Ticketnumbers} {Tickets} hinzu"
+            "erstelle ein {Tickets}",
+            "erstelle einen {Tickets}",
+            "erstelle mir einen {Tickets}",
+            "erstelle mir ein {Tickets}",
+            "erstelle ein neuen {Tickets}",
+            "füge mir ein {Tickets} ein",
+            "füge mir einen {Tickets} hinzu"
           ]
         }
       ]
