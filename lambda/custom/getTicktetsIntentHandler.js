@@ -22,10 +22,6 @@ exports.GetTicktetsIntentHandler = {
             let ticketNumbers = filledSlots.Ticketnumbers.value;
             let timespan = filledSlots.Timespan.value;
 
-            console.log("Timespan: " + timespan);
-            console.log("ticketNumbers: " + ticketNumbers);
-
-
             if (typeof ticketNumbers === 'undefined' || ticketNumbers === '?') {
                 ticketNumbers = 1;
             }
@@ -33,8 +29,6 @@ exports.GetTicktetsIntentHandler = {
             if (typeof timespan === 'undefined') {
                 timespan = 'letzten';
             }
-            console.log("Timespan after: " + timespan);
-            console.log("ticketNumbers after: " + ticketNumbers);
 
             let serviceNowTable = '';
             // get table names from service now: System Definition > Tables
@@ -48,7 +42,7 @@ exports.GetTicktetsIntentHandler = {
                 serviceNowTable = 'problem';
             }
 
-            const records = await getRecords(serviceNowTable, ticketNumbers, timespan);       // Get the records
+            const records = await getRecords(serviceNowTable, ticketNumbers, timespan);     // Get the records
 
             let speechText;
             if (ticketNumbers === 1) {
@@ -76,15 +70,14 @@ exports.GetTicktetsIntentHandler = {
 };
 
 function getRecords(recType, ticketNumbers, timespan) {
-    const hdrAuth = "Bearer " + accessToken; //??
+    const hdrAuth = "Bearer " + accessToken;
     let sort = 'DESC';
 
     if (timespan === "ältesten" || timespan === "älteste" || timespan === "spätesten" || timespan === "spätesteste") {
         sort = 'ASC';
     }
-    console.log("Sortierung: ", sort);
 
-    return new Promise(((resolve, reject) => { //??
+    return new Promise(((resolve, reject) => {
         const serviceNowInstance = constants.servicenow.instance;
 
         const options = {
@@ -104,7 +97,6 @@ function getRecords(recType, ticketNumbers, timespan) {
 
             if (response.statusCode < 200 || response.statusCode >= 300) {
                 return reject(new Error(`${response.statusCode}: ${response.req.getHeader('host')} ${response.req.path}`));
-                //To Do
             }
 
             response.on('data', (chunk) => {
@@ -112,15 +104,11 @@ function getRecords(recType, ticketNumbers, timespan) {
             });
 
             response.on('end', () => {
-                resolve(JSON.parse(returnData)); //??
-                console.log(JSON.parse(returnData));
+                resolve(JSON.parse(returnData));
             });
 
             response.on('error', (error) => {
-                reject(error); //??
-                //ToDo
-                //response({ 'errorType': 'error', 'errorText': 'Leider trat ein Fehler auf und es konnten keine Daten abgerufen werden. Bitte kontaktieren Sie Ihren Systemadministrator. Vielen Dank.' });
-
+                reject(error);
             });
         });
         request.end();
