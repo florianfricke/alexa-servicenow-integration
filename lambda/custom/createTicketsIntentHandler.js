@@ -6,7 +6,6 @@ let accessToken = "";
 exports.CreateTicketsIntentHandler = {
     canHandle(handlerInput) {
         accessToken = handlerInput.requestEnvelope.session.user.accessToken;
-
         return handlerInput.requestEnvelope.request.type == 'IntentRequest'
             && handlerInput.requestEnvelope.request.intent.name == 'CreateTicketsIntent';
     },
@@ -19,6 +18,8 @@ exports.CreateTicketsIntentHandler = {
         else {
             const filledSlots = handlerInput.requestEnvelope.request.intent.slots;
             const ticketType = filledSlots.Tickets.value;
+            const userName = filledSlots.Nutzername.value;
+            const shortDescription = filledSlots.Kurzbeschreibung.value;
 
             let serviceNowTable = '';
             // get table names from service now: System Definition > Tables
@@ -31,12 +32,15 @@ exports.CreateTicketsIntentHandler = {
             else if (ticketType.indexOf('problem') == 0) {
                 serviceNowTable = 'problem';
             }
+            else {
+                serviceNowTable = 'incident';
+            }
 
-            const records = await setRecords(serviceNowTable);
+            await setRecords(serviceNowTable, userName, shortDescription);
             
             let speechText;
-            speechText = 'Das ' + ticketType + ' Ticket mit der Nummer '+ records.result[0].number + 'wurde angelegt.';
-            speechText += "Was kann ich noch für Sie tun?";
+            speechText = 'Das ' + ticketType + ' Ticket wurde angelegt.';
+            speechText += '<break time=".5s" /> Was kann ich noch für Sie tun?';
 
             return handlerInput.responseBuilder
                 .speak(speechText)
@@ -46,16 +50,28 @@ exports.CreateTicketsIntentHandler = {
     }
 };
 
-function setRecords(recType) {
-    const hdrAuth = "Bearer " + accessToken; //??
+function setRecords(recType, userName, shortDescription) {
+    const hdrAuth = "Bearer " + accessToken;
 
-    return new Promise(((resolve, reject) => { //??
+    return new Promise(((resolve, reject) => {
         const serviceNowInstance = constants.servicenow.instance;
-
-        const data = JSON.stringify({
-            caller_id: 'Abel Tuter',
-            short_description: 'Der Bildschirm funktioniert nicht!',
-        });
+        let data = null;
+        if (recType == "problem")
+            data = {
+                opened_by: userName,
+                short_description: shortDescription,
+            };
+        else if (recType == "incident")
+            data = {
+                caller_id: userName,
+                short_description: shortDescription,
+            };
+        else if (recType == "change_request")
+            data = {
+                requested_by: userName,
+                short_description: shortDescription,
+            };
+        data = JSON.stringify(data)
 
         const options = {
             hostname: serviceNowInstance,
@@ -76,25 +92,14 @@ function setRecords(recType) {
             }
 
             response.on('data', (d) => {
-                process.stdout.write(d);
-            });
-
-            response.on('end', () => {
-                resolve(JSON.parse(returnData)); //??
-                console.log("service now json: " + JSON.parse(returnData));
+                resolve(process.stdout.write(d));
             });
 
             response.on('error', (error) => {
-                reject(error); //??
-                //ToDo
-                //response({ 'errorType': 'error', 'errorText': 'Leider trat ein Fehler auf und es konnten keine Daten abgerufen werden. Bitte kontaktieren Sie Ihren Systemadministrator. Vielen Dank.' });
-
+                reject(error);
             });
         });
-        console.log("Before write");
         request.write(data);
-        console.log("After write");
         request.end();
-        console.log("After End");
     }));
 }

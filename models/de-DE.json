@@ -2,6 +2,104 @@
   "interactionModel": {
     "languageModel": {
       "invocationName": "servicenow",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "GetTicktetsIntent",
+          "slots": [
+            {
+              "name": "Tickets",
+              "type": "TICKETS"
+            },
+            {
+              "name": "Timespan",
+              "type": "TIMESPAN"
+            },
+            {
+              "name": "Ticketnumbers",
+              "type": "AMAZON.NUMBER"
+            }
+          ],
+          "samples": [
+            "nach {Tickets}",
+            "nach dem {Timespan} {Ticketnumbers} {Tickets}",
+            "nach {Ticketnumbers} {Tickets}",
+            "gib mir die {Ticketnumbers} {Tickets} aus",
+            "gib mir den {Ticketnumbers} {Tickets} aus",
+            "gib mir den {Ticketnumbers} {Tickets} aus",
+            "gib mir den {Timespan} {Tickets} aus",
+            "gib mir das {Timespan} {Tickets} Ticket aus",
+            "sage mir {Ticketnumbers} {Tickets} an",
+            "sage mir die {Timespan} {Ticketnumbers} {Tickets} an",
+            "die {Timespan} {Ticketnumbers} {Tickets} ansagen",
+            "sage mir alle {Timespan} {Tickets} an",
+            "alle {Tickets} ansagen",
+            "alle {Timespan} {Tickets} ansagen"
+          ]
+        },
+        {
+          "name": "CreateTicketsIntent",
+          "slots": [
+            {
+              "name": "Tickets",
+              "type": "TICKETS",
+              "samples": [
+                "Lege einen {Tickets} an",
+                "Einen {Tickets}",
+                "Ein {Tickets}",
+                "{Tickets}",
+                "Die Ticketart lautet {Tickets}"
+              ]
+            },
+            {
+              "name": "Nutzername",
+              "type": "AMAZON.SearchQuery",
+              "samples": [
+                "{Nutzername}",
+                "Mein Nutzername ist {Nutzername}",
+                "Der Nutzername ist {Nutzername}",
+                "Mein Nutzername lautet {Nutzername}",
+                "Der Nutzername lautet {Nutzername}"
+              ]
+            },
+            {
+              "name": "Kurzbeschreibung",
+              "type": "AMAZON.SearchQuery",
+              "samples": [
+                "{Kurzbeschreibung}",
+                "Die Kurzbeschreibung ist {Kurzbeschreibung}",
+                "Die Kurzbeschreibung lautet {Kurzbeschreibung}"
+              ]
+            }
+          ],
+          "samples": [
+            "erstelle ein Ticket",
+            "erstelle ein neues Tickets",
+            "erstelle einen Tickets",
+            "erstelle einen neuen Tickets",
+            "erstelle mir einen Tickets",
+            "erstelle mir ein Tickets",
+            "erstelle ein neuen Tickets",
+            "füge mir ein Tickets ein",
+            "füge mir einen Tickets hinzu"
+          ]
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        }
+      ],
       "types": [
         {
           "name": "TIMESPAN",
@@ -70,97 +168,75 @@
             }
           ]
         }
-      ],
+      ]
+    },
+    "dialog": {
       "intents": [
         {
-          "name": "AMAZON.CancelIntent",
-          "samples": []
-        },
-        {
-          "name": "AMAZON.HelpIntent",
-          "samples": []
-        },
-        {
-          "name": "AMAZON.StopIntent",
-          "samples": []
-        },
-        {
-          "name": "GetTicktetsIntent",
-          "slots": [
-            {
-              "name": "Tickets",
-              "type": "TICKETS"
-            },
-            {
-              "name": "Timespan",
-              "type": "TIMESPAN"
-            },
-            {
-              "name": "Ticketnumbers",
-              "type": "AMAZON.NUMBER"
-            }
-          ],
-          "samples": [
-            "nach {Tickets}",
-            "nach dem {Timespan} {Ticketnumbers} {Tickets}",
-            "nach {Ticketnumbers} {Tickets}",
-            "gib mir die {Ticketnumbers} {Tickets} aus",
-            "gib mir den {Ticketnumbers} {Tickets} aus",
-            "gib mir den {Ticketnumbers} {Tickets} aus",
-            "gib mir den {Timespan} {Tickets} aus",
-            "gib mir das {Timespan} {Tickets} Ticket aus",
-            "sage mir {Ticketnumbers} {Tickets} an",
-            "sage mir die {Timespan} {Ticketnumbers} {Tickets} an",
-            "die {Timespan} {Ticketnumbers} {Tickets} ansagen",
-            "sage mir alle {Timespan} {Tickets} an",
-            "alle {Tickets} ansagen",
-            "alle {Timespan} {Tickets} ansagen"
-          ]
-        },
-        {
-          "name": "RemoveTicktetsIntent",
-          "slots": [
-            {
-              "name": "Tickets",
-              "type": "TICKETS"
-            },
-            {
-              "name": "Timespan",
-              "type": "TIMESPAN"
-            },
-            {
-              "name": "Ticketnumbers",
-              "type": "AMAZON.NUMBER"
-            }
-          ],
-          "samples": [
-            "lösche {Ticketnumbers} {Tickets}",
-            "lösche den {Timespan} {Tickets}",
-            "lösche mir den {Timespan} {Tickets} an",
-            "lösche die {Timespan} {Ticketnumbers} {Tickets}",
-            "lösche mir die {Timespan} {Ticketnumbers} {Tickets}",
-            "lösche mir das {Timespan} {Ticketnumbers} {Tickets}"
-          ]
-        },
-        {
           "name": "CreateTicketsIntent",
+          "confirmationRequired": false,
+          "prompts": {},
           "slots": [
             {
               "name": "Tickets",
-              "type": "TICKETS"
+              "type": "TICKETS",
+              "confirmationRequired": false,
+              "elicitationRequired": true,
+              "prompts": {
+                "elicitation": "Elicit.Slot.350867255443.195960091082"
+              }
+            },
+            {
+              "name": "Nutzername",
+              "type": "AMAZON.SearchQuery",
+              "confirmationRequired": false,
+              "elicitationRequired": true,
+              "prompts": {
+                "elicitation": "Elicit.Slot.954993215970.454105253553"
+              }
+            },
+            {
+              "name": "Kurzbeschreibung",
+              "type": "AMAZON.SearchQuery",
+              "confirmationRequired": false,
+              "elicitationRequired": true,
+              "prompts": {
+                "elicitation": "Elicit.Slot.954993215970.948052608487"
+              }
             }
-          ],
-          "samples": [
-            "erstelle ein {Tickets}",
-            "erstelle einen {Tickets}",
-            "erstelle mir einen {Tickets}",
-            "erstelle mir ein {Tickets}",
-            "erstelle ein neuen {Tickets}",
-            "füge mir ein {Tickets} ein",
-            "füge mir einen {Tickets} hinzu"
           ]
         }
-      ]
-    }
+      ],
+      "delegationStrategy": "ALWAYS"
+    },
+    "prompts": [
+      {
+        "id": "Elicit.Slot.350867255443.195960091082",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Welche Ticketart soll angelegt werden?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.954993215970.454105253553",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Wie lautet dein Benutzername?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.954993215970.948052608487",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Wie lautet die Kurzbeschreibung?"
+          }
+        ]
+      }
+    ]
   }
 }
