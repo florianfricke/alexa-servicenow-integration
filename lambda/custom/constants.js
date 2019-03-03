@@ -1,3 +1,3 @@
 exports.servicenow = {
-  instance: 'dev71109.service-now.com',
+  instance: 'devXXXXX.service-now.com',
 };
