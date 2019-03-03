@@ -22,7 +22,6 @@ exports.CreateTicketsIntentHandler = {
             const shortDescription = filledSlots.Kurzbeschreibung.value;
 
             let serviceNowTable = '';
-            // get table names from service now: System Definition > Tables
             if (ticketType.indexOf('incident') == 0) {
                 serviceNowTable = 'incident';
             }

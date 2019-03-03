@@ -31,7 +31,6 @@ exports.GetTicktetsIntentHandler = {
             }
 
             let serviceNowTable = '';
-            // get table names from service now: System Definition > Tables
             if (ticketType.indexOf('incident') == 0) {
                 serviceNowTable = 'incident';
             }
@@ -42,7 +41,7 @@ exports.GetTicktetsIntentHandler = {
                 serviceNowTable = 'problem';
             }
 
-            const records = await getRecords(serviceNowTable, ticketNumbers, timespan);     // Get the records
+            const records = await getRecords(serviceNowTable, ticketNumbers, timespan);
 
             let speechText;
             if (ticketNumbers === 1) {
