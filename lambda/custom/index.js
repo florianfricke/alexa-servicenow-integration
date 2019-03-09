@@ -1,7 +1,6 @@
 const Alexa = require('ask-sdk-core');
 const language = require('./language');
 const GetTicktetsIntent = require('./getTicktetsIntentHandler');
-const RemoveTicketIntent = require('./removeTicketIntentHandler');
 const CreateTicktetsIntent = require('./createTicketsIntentHandler');
 
 let accessToken = "";
@@ -84,7 +83,6 @@ exports.handler = skillBuilder
   .addRequestHandlers(
     LaunchRequestHandler,
     GetTicktetsIntent.GetTicktetsIntentHandler,
-    RemoveTicketIntent.RemoveTicktetsIntentHandler,
     CreateTicktetsIntent.CreateTicketsIntentHandler,
     HelpIntentHandler,
     CancelAndStopIntentHandler,
