@@ -3,7 +3,7 @@
     "publishingInformation": {
       "locales": {
         "en-GB": {
-          "summary": "Manage Tickets in Service Now",
+          "summary": "Manage Tickets in ServiceNow",
           "examplePhrases": [
             "Alexa open servicenow"
           ],
@@ -13,10 +13,10 @@
             "itsm"
           ],
           "name": "Service Now Integration",
-          "description": "Connects to a ServiceNow instance and reads different number of tickets. Allows Additionally to delete and build Service Now tickets like incidents, problems and changes. "
+          "description": "Connects to a ServiceNow instance and reads out different number of tickets. Allows additionally build new ServiceNow tickets like incidents, problems and change requests."
         },
         "de-DE": {
-          "summary": "Verwalten von Tickets im Service Now",
+          "summary": "Verwalten von Tickets im ServiceNow",
           "examplePhrases": [
             "Alexa öffne servicenow"
           ],
@@ -26,7 +26,7 @@
             "itsm"
           ],
           "name": "Service Now Integration",
-          "description": "Verbindet zu einer Service Now Instanz und liest eine verschieden Anzahl von Tickets aus. Erlaubt weiterhin das Erstellen und Löschen von von Tickets wie Problems, Changes und Incidents."
+          "description": "Der Skill ermöglicht es einen belibiege Anzahl an Tickets (Incidents, Problems and Change Requests) einer Service Now Instanz auszugeben. Zusätzlich ist das Erstellen eines neuen Tickets möglich."
         }
       },
       "isAvailableWorldwide": true,
