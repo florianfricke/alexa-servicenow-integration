@@ -53,7 +53,7 @@ exports.GetTicktetsIntentHandler = {
                 }
                 speechText = 'Das ' + timespan + ' ' + ticketType + ' Ticket lautet: <break time=".5s" />' + records.result[0].short_description + '. ';
             } else {
-                speechText = 'Die ' + timespan + ' ' + + ticketNumbers + ' ' + ticketType + ' lauten: <break time=".5s" />';
+                speechText = 'Die ' + timespan + ' ' + ticketNumbers + ' ' + ticketType + ' lauten: <break time=".5s" />';
                 for (let i = 0; i < ticketNumbers; i++) {
                     speechText += "Ticket " + (i + 1) + '<break time=".5s"/>' + records.result[i].short_description + ". ";
                 }
