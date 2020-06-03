@@ -1,4 +1,4 @@
-# Alexa Skill mit Servicenow Integration
+# Alexa Skill mit ServiceNow Integration
 Ziel des Projektes ist die prototypische Integration des Amazon Sprachassistent Alexa mit der der IT-Service Management Plattform ServiceNow. Dabei liegt der Fokus auf die Entwicklung eines Alexa Skills, der über eine Schnittstelle mit der ServiceNow Plattform kommuniziert und verschiedene Anwendungsfälle umsetzt.
 
 ### umgesetzte Anwendungsfälle
