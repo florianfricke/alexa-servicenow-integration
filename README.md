@@ -8,5 +8,8 @@ Ziel des Projektes ist die prototypische Integration des Amazon Sprachassistent 
 * Anlegen ein neues Ticket (Incident, Problem, Change Request) über die Spracheingabe
   * z.B. „Lege einen Incident an.“
 
+### verwendete Tools
+Node.js, AWS Lambda, Service Now, Amazon Voice Service
+
 ### Einrichtung und Installation
 Die Installationsanleitung ist auf Anfrage verfügbar. 
