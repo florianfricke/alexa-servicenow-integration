@@ -22,7 +22,7 @@ exports.GetTicktetsIntentHandler = {
             let ticketNumbers = filledSlots.Ticketnumbers.value;
             let timespan = filledSlots.Timespan.value;
 
-            if (typeof ticketNumbers === 'undefined' || ticketNumbers === '?') {
+            if (typeof ticketNumbers === 'undefined' || ticketNumbers === '?' || ticketNumbers === 0) {
                 ticketNumbers = 1;
             }
 
@@ -30,7 +30,7 @@ exports.GetTicktetsIntentHandler = {
                 timespan = 'letzten';
             }
 
-            let serviceNowTable = '';
+            let serviceNowTable = 'incident';
             if (ticketType.indexOf('incident') == 0) {
                 serviceNowTable = 'incident';
             }
